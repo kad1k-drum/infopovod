@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - ИНФОПОВОД</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('fon2.jpg') center/cover fixed no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            opacity: 0;
+            animation: fadeInBody 1.5s ease-out forwards;
+        }
+
+        /* Анимация появления всей страницы */
+        @keyframes fadeInBody {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        header {
+            background-color: #222;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeInDown 1s ease-out 0.5s forwards;
+        }
+
+        /* Анимация появления сверху */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Логотип как изображение - БЕЗ РАМКИ */
+        .logo-image {
+            max-width: 300px;
+            max-height: 120px;
+            width: auto;
+            height: auto;
+            background: transparent;
+            border: none;
+            display: block;
+            margin: 0 auto 0.5rem auto;
+            outline: none;
+            box-shadow: none;
+        }
+        
+        /* Гамбургер-меню - СЛЕВА (ВИДНО ВСЕГДА) */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 15px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(0,0,0,0.7);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            opacity: 0;
+            animation: fadeInLeft 1s ease-out 0.8s forwards;
+        }
+
+        /* Анимация появления слева */
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .menu-toggle:hover {
+            background: rgba(0,0,0,0.9);
+        }
+        
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        /* Анимация гамбургера в крестик */
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .mobile-nav.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .mobile-nav ul {
+            list-style: none;
+            text-align: center;
+        }
+        
+        /* Анимация плавного выезжания вкладок */
+        .mobile-nav ul li {
+            margin: 2.5rem 0;
+            transform: translateX(-150px) rotate(-10deg);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: blur(5px);
+        }
+
+        .mobile-nav.active ul li {
+            transform: translateX(0) rotate(0deg);
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        .mobile-nav.active ul li:nth-child(1) {
+            transition-delay: 0.15s;
+        }
+
+        .mobile-nav.active ul li:nth-child(2) {
+            transition-delay: 0.25s;
+        }
+
+        .mobile-nav.active ul li:nth-child(3) {
+            transition-delay: 0.35s;
+        }
+
+        .mobile-nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 1.2rem 3rem;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            transform: scale(0.8);
+        }
+
+        .mobile-nav.active ul li a {
+            transform: scale(1);
+        }
+
+        .mobile-nav ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,107,107,0.6), 
+                rgba(255,107,107,0.3),
+                transparent
+            );
+            transition: left 0.8s ease;
+        }
+
+        .mobile-nav ul li a:hover {
+            color: #ff6b6b;
+            transform: scale(1.1) translateX(20px);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 
+                0 15px 40px rgba(255,107,107,0.4),
+                0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        .mobile-nav ul li a:hover::before {
+            left: 100%;
+        }
+        
+        /* Обычное меню - СКРЫВАЕМ ВСЕГДА */
+        nav.desktop-nav {
+            display: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+
+        /* Анимация появления снизу */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            /* СЕРЫЙ ФОН как в хедере */
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSection 0.8s ease-out forwards;
+        }
+
+        /* Анимация для секций с задержкой */
+        @keyframes fadeInSection {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Разные задержки для секций */
+        #about {
+            animation-delay: 1.2s;
+        }
+
+        #members {
+            animation-delay: 1.4s;
+        }
+
+        #gallery {
+            animation-delay: 1.6s;
+        }
+
+        #contacts {
+            animation-delay: 1.8s;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        .members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 2rem;
+        }
+        
+        .member {
+            text-align: center;
+            flex: 1 1 200px;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInScale 0.6s ease-out forwards;
+        }
+
+        /* Анимация появления с масштабированием для участников */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Задержки для участников */
+        .member:nth-child(1) { animation-delay: 1.6s; }
+        .member:nth-child(2) { animation-delay: 1.7s; }
+        .member:nth-child(3) { animation-delay: 1.8s; }
+        .member:nth-child(4) { animation-delay: 1.9s; }
+        
+        .member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid #444;
+            transition: transform 0.3s ease;
+        }
+
+        .member img:hover {
+            transform: scale(1.1);
+            border-color: #666;
+        }
+        
+        .member h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .member p {
+            color: #ccc;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: transform 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            border: 2px solid #444;
+        }
+
+        /* Задержки для галереи */
+        .gallery img:nth-child(1) { animation-delay: 1.8s; }
+        .gallery img:nth-child(2) { animation-delay: 1.9s; }
+        .gallery img:nth-child(3) { animation-delay: 2.0s; }
+        
+        .gallery img:hover {
+            transform: scale(1.05);
+            border-color: #666;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border: 2px solid #444;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        input, textarea {
+            padding: 0.8rem;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #333;
+            color: white;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 2px rgba(255,107,107,0.2);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #999;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        button[type="submit"] {
+            background-color: #444;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 2.2s forwards;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #555;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 2s forwards;
+        }
+        
+        .social-links {
+            margin: 1rem 0;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ff6b6b;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #222;
+            margin: 20% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: modalopen 0.4s;
+            position: relative;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            color: white;
+        }
+        
+        .modal-icon {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+        
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            
+            .container {
+                margin: 1rem auto;
+                padding: 1rem;
+                width: 95%;
+            }
+            
+            header {
+                padding: 0.5rem 0;
+            }
+            
+            .logo-image {
+                max-width: 250px;
+                max-height: 100px;
+            }
+            
+            .menu-toggle {
+                top: 10px;
+                left: 10px;
+                padding: 10px;
+            }
+            
+            .members {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .member {
+                flex: 1 1 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .member img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .gallery img {
+                height: 150px;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            input, textarea {
+                padding: 0.7rem;
+                font-size: 16px;
+            }
+            
+            button[type="submit"] {
+                padding: 0.8rem;
+                font-size: 16px;
+            }
+            
+            .modal-content {
+                margin: 30% auto;
+                padding: 1.5rem;
+                width: 85%;
+            }
+            
+            .video-container {
+                margin-bottom: 0.5rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .mobile-nav ul li a {
+                font-size: 1.8rem;
+                padding: 1rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0.5rem auto;
+                padding: 0.8rem;
+            }
+            
+            .logo-image {
+                max-width: 200px;
+                max-height: 80px;
+            }
+            
+            .member img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .gallery img {
+                height: 120px;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            .modal-content {
+                margin: 40% auto;
+                padding: 1rem;
+            }
+            
+            .mobile-nav ul li a {
+                font-size: 1.5rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Фото логотипа вместо текста -->
+        <img src="logo.png" alt="ИНФОПОВОД" class="logo-image">
+        <div>Кавер-группа на популярные хиты</div>
+        
+        <!-- Гамбургер-кнопка - СЛЕВА (ВИДНА ВСЕГДА) -->
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    
+    <!-- Мобильное меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ) -->
+    <nav class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="concerts.html">Концерты</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <section id="about">
+            <h2>О нашей группе</h2>
+            <p>Мы - профессиональная кавер-группа, исполняющая популярные хиты с оригинальным звучанием. Наш репертуар включает лучшие композиции разных эпох и стилей, адаптированные под современное звучание.</p>
+            <p>Основанная в 20XX году, наша группа уже успела завоевать признание публики на многочисленных мероприятиях и концертных площадках. Мы гарантируем высокое качество исполнения и создание незабываемой атмосферы на вашем мероприятии.</p>
+        </section>
+        
+        <section id="members">
+            <h2>Участники группы</h2>
+            <div class="members">
+                <div class="member">
+                    <img src="v.png" alt="Вокалист">
+                    <h3>Валерий</h3>
+                    <p>Вокал</p>
+                </div>
+                <div class="member">
+                    <img src="i.png" alt="Гитарист">
+                    <h3>Игорь</h3>
+                    <p>Гитара</p>
+                </div>
+                <div class="member">
+                    <img src="d.jpg" alt="Барабанщик">
+                    <h3>Даниэль</h3>
+                    <p>Барабаны</p>
+                </div>
+                <div class="member">
+                    <img src="r.png" alt="Клавиши">
+                    <h3>Роман</h3>
+                    <p>Клавиши</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="gallery">
+            <h2>Фото с наших выступлений</h2>
+            <div class="gallery">
+                <img src="f1.jpg" alt="Выступление 1">
+                <img src="f2.jpg" alt="Выступление 2">
+                <img src="f3.jpg" alt="Выступление 3">
+		<img src="f4.jpg" alt="Выступление 4">
+            </div>
+        </section>
+        
+        <section id="contacts">
+            <h2>Заказать выступление</h2>
+            <p>Для бронирования даты выступления или получения дополнительной информации, пожалуйста, свяжитесь с нами:</p>
+            
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Детали мероприятия</label>
+                    <textarea id="message" required placeholder="Дата, место, пожелания по репертуару..."></textarea>
+                </div>
+                
+                <button type="submit">Отправить заявку</button>
+            </form>
+            
+            <h3>Контакты</h3>
+            <p>Телефон: +7 (XXX) XXX-XX-XX</p>
+            <p>Email: info@nazvaniegruppy.ru</p>
+        </section>
+    </div>
+    
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Заявка отправлена!</h2>
+            <p>Мы свяжемся с вами в течение 24 часов.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-vk"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>© 2023 ИНФОПОВОД. Все права защищены.</p>
+    </footer>
+
+    <script>
+        // Гамбургер-меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ)
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        });
+
+        // Закрытие меню при клике на ссылку
+        const mobileLinks = mobileNav.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                mobileNav.classList.remove('active');
+            });
+        });
+
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', function(e) {
+            if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // Форма заявки
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('success-modal').style.display = 'block';
+            this.reset();
+        });
+        
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.getElementById('success-modal').style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target == document.getElementById('success-modal')) {
+                document.getElementById('success-modal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
