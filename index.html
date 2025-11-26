@@ -21,9 +21,12 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        /* Фон */
+        /* Фон с исправлениями для iOS */
         .background-container {
             position: fixed;
             top: 0;
@@ -32,6 +35,8 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
         
         .background-container img,
@@ -40,6 +45,8 @@
             height: 100%;
             object-fit: cover;
             filter: grayscale(100%) contrast(110%);
+            -webkit-user-drag: none;
+            -webkit-touch-callout: none;
         }
         
         /* Затемнение фона */
@@ -56,6 +63,8 @@
                 rgba(0,0,0,0.6) 50%,
                 rgba(0,0,0,0.9) 100%
             );
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
         
         /* Логотип */
@@ -64,6 +73,8 @@
             margin-top: 1vh;
             animation: fadeInDown 1.5s ease-out;
             max-width: 80%;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
         
         .logo-text {
@@ -73,12 +84,15 @@
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             margin-bottom: 0.5rem;
             letter-spacing: 3px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .logo-image {
             max-width: 100%;
             max-height: 200px;
             object-fit: contain;
+            -webkit-user-drag: none;
+            -webkit-touch-callout: none;
         }
         
         .tagline {
@@ -86,12 +100,15 @@
             color: #ccc;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
             letter-spacing: 1px;
+            -webkit-font-smoothing: antialiased;
         }
         
         /* Кнопка входа */
         .enter-button {
             margin-bottom: 20vh;
             animation: fadeInUp 1.5s ease-out;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
         
         .enter-btn {
@@ -109,6 +126,10 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             backdrop-filter: blur(5px);
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
         
         .enter-btn:hover {
@@ -144,6 +165,42 @@
                 transform: translateY(0);
             }
         }
+
+        /* Специфичные стили для iOS */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* Предотвращение bounce-эффекта на iOS */
+                position: fixed;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .background-container {
+                /* Фикс для фона на iOS */
+                -webkit-backface-visibility: hidden;
+                -webkit-perspective: 1000;
+            }
+            
+            .enter-btn {
+                /* Улучшение внешнего вида кнопки на iOS */
+                -webkit-touch-callout: none;
+            }
+        }
+
+        /* Фикс для Safari */
+        @media not all and (min-resolution:.001dpcm) { 
+            @supports (-webkit-appearance:none) {
+                .background-container::after {
+                    /* Фикс градиента в Safari */
+                    background: linear-gradient(
+                        to bottom,
+                        rgba(0,0,0,0.95) 0%,
+                        rgba(0,0,0,0.7) 50%,
+                        rgba(0,0,0,0.95) 100%
+                    );
+                }
+            }
+        }
         
         /* Мобильная адаптация */
         @media (max-width: 768px) {
@@ -172,6 +229,17 @@
             .enter-button {
                 margin-bottom: 25vh;
             }
+
+            /* Фикс для мобильного Safari */
+            @supports (-webkit-touch-callout: none) {
+                body {
+                    min-height: -webkit-fill-available;
+                }
+                
+                .background-container {
+                    height: -webkit-fill-available;
+                }
+            }
         }
         
         @media (max-width: 480px) {
@@ -192,6 +260,13 @@
                 font-size: 0.85rem;
             }
         }
+
+        /* Предотвращение масштабирования на iOS */
+        @media (max-width: 768px) {
+            body {
+                -webkit-text-size-adjust: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -202,7 +277,7 @@
     <!-- ВАРИАНТ 1: ВИДЕО ФОН -->
     <!--
     <div class="background-container">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline webkit-playsinline>
             <source src="videos/background-video.mp4" type="video/mp4">
             Ваш браузер не поддерживает видео
         </video>
@@ -247,6 +322,49 @@
             link.rel = 'prefetch';
             link.href = 'main.html';
             document.head.appendChild(link);
+        });
+
+        // Фиксы для iOS
+        document.addEventListener('DOMContentLoaded', function() {
+            // Предотвращение масштабирования на iOS
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+
+            // Фикс для фона на iOS
+            const backgroundContainer = document.querySelector('.background-container');
+            if (backgroundContainer) {
+                backgroundContainer.style.webkitTransform = 'translateZ(0)';
+                backgroundContainer.style.transform = 'translateZ(0)';
+            }
+
+            // Фикс высоты для мобильного Safari
+            function setVH() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
+        });
+
+        // Предотвращение контекстного меню на изображениях
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
