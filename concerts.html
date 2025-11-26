@@ -13,12 +13,6 @@
         }
         
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('fon2.jpg') center/cover fixed no-repeat;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -26,16 +20,28 @@
             color: white;
             opacity: 0;
             animation: fadeInBody 1.5s ease-out forwards;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
 
-        /* Анимация появления всей страницы */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('fon2.jpg') center/cover no-repeat;
+            z-index: -2;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
         @keyframes fadeInBody {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         header {
@@ -48,7 +54,6 @@
             animation: fadeInDown 1s ease-out 0.5s forwards;
         }
 
-        /* Анимация появления сверху */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -60,7 +65,6 @@
             }
         }
         
-        /* Логотип как изображение - БЕЗ РАМКИ */
         .logo-image {
             max-width: 300px;
             max-height: 120px;
@@ -70,11 +74,8 @@
             border: none;
             display: block;
             margin: 0 auto 0.5rem auto;
-            outline: none;
-            box-shadow: none;
         }
         
-        /* Гамбургер-меню - СЛЕВА (ВИДНО ВСЕГДА) */
         .menu-toggle {
             display: flex;
             flex-direction: column;
@@ -91,7 +92,6 @@
             animation: fadeInLeft 1s ease-out 0.8s forwards;
         }
 
-        /* Анимация появления слева */
         @keyframes fadeInLeft {
             from {
                 opacity: 0;
@@ -115,7 +115,6 @@
             transition: 0.3s;
         }
         
-        /* Анимация гамбургера в крестик */
         .menu-toggle.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
@@ -147,13 +146,30 @@
             display: flex;
             opacity: 1;
         }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1002;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .mobile-nav.active .close-menu {
+            display: block;
+        }
         
         .mobile-nav ul {
             list-style: none;
             text-align: center;
         }
         
-        /* Анимация плавного выезжания вкладок */
         .mobile-nav ul li {
             margin: 2.5rem 0;
             transform: translateX(-150px) rotate(-10deg);
@@ -168,17 +184,9 @@
             filter: blur(0);
         }
 
-        .mobile-nav.active ul li:nth-child(1) {
-            transition-delay: 0.15s;
-        }
-
-        .mobile-nav.active ul li:nth-child(2) {
-            transition-delay: 0.25s;
-        }
-
-        .mobile-nav.active ul li:nth-child(3) {
-            transition-delay: 0.35s;
-        }
+        .mobile-nav.active ul li:nth-child(1) { transition-delay: 0.15s; }
+        .mobile-nav.active ul li:nth-child(2) { transition-delay: 0.25s; }
+        .mobile-nav.active ul li:nth-child(3) { transition-delay: 0.35s; }
 
         .mobile-nav ul li a {
             color: white;
@@ -228,11 +236,6 @@
             left: 100%;
         }
         
-        /* Обычное меню - СКРЫВАЕМ ВСЕГДА */
-        nav.desktop-nav {
-            display: none;
-        }
-        
         .container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -241,7 +244,6 @@
             animation: fadeInUp 1s ease-out 1s forwards;
         }
 
-        /* Анимация появления снизу */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -255,7 +257,6 @@
         
         section {
             margin-bottom: 3rem;
-            /* СЕРЫЙ ФОН как в хедере */
             background-color: #222;
             padding: 2rem;
             border-radius: 5px;
@@ -265,7 +266,6 @@
             animation: fadeInSection 0.8s ease-out forwards;
         }
 
-        /* Анимация для секций с задержкой */
         @keyframes fadeInSection {
             from {
                 opacity: 0;
@@ -277,18 +277,9 @@
             }
         }
 
-        /* Разные задержки для секций */
-        section:nth-child(1) {
-            animation-delay: 1.2s;
-        }
-
-        section:nth-child(2) {
-            animation-delay: 1.4s;
-        }
-
-        section:nth-child(3) {
-            animation-delay: 1.6s;
-        }
+        #upcoming { animation-delay: 1.2s; }
+        #past-events { animation-delay: 1.4s; }
+        #repertoire { animation-delay: 1.6s; }
         
         h1, h2, h3 {
             margin-bottom: 1rem;
@@ -300,40 +291,24 @@
             line-height: 1.6;
         }
         
-        ul {
-            color: #ccc;
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
+        .concert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
         
-        li {
-            margin-bottom: 0.5rem;
-        }
-        
-        a {
-            color: #ff6b6b;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        a:hover {
-            color: #ff8e8e;
-        }
-        
-        .concert {
-            background-color: #333;
+        .concert-item {
+            background: #333;
             padding: 1.5rem;
             border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #444;
-            transition: all 0.3s ease;
+            border-left: 4px solid #ff6b6b;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             opacity: 0;
             transform: translateX(-20px);
-            animation: fadeInRight 0.6s ease-out forwards;
+            animation: slideInRight 0.6s ease-out forwards;
         }
 
-        /* Анимация появления справа для концертов */
-        @keyframes fadeInRight {
+        @keyframes slideInRight {
             from {
                 opacity: 0;
                 transform: translateX(-20px);
@@ -344,49 +319,118 @@
             }
         }
 
-        /* Задержки для концертов */
-        .concert:nth-child(1) { animation-delay: 1.6s; }
-        .concert:nth-child(2) { animation-delay: 1.7s; }
-        .concert:nth-child(3) { animation-delay: 1.8s; }
-        .concert:nth-child(4) { animation-delay: 1.9s; }
-        .concert:nth-child(5) { animation-delay: 2.0s; }
-        .concert:nth-child(6) { animation-delay: 2.1s; }
+        .concert-item:nth-child(1) { animation-delay: 1.4s; }
+        .concert-item:nth-child(2) { animation-delay: 1.5s; }
+        .concert-item:nth-child(3) { animation-delay: 1.6s; }
         
-        .concert:hover {
-            transform: translateX(5px);
-            background-color: #3a3a3a;
+        .concert-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
         }
         
         .concert-date {
             color: #ff6b6b;
             font-weight: bold;
-            margin-bottom: 0.5rem;
             font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
         
-        .concert-place {
+        .concert-location {
             color: #ccc;
             margin-bottom: 0.5rem;
         }
         
-        .concert-time {
+        .concert-description {
             color: #999;
+        }
+        
+        .repertoire-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .genre-category {
+            background: #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: fadeInScale 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .genre-category:nth-child(1) { animation-delay: 1.7s; }
+        .genre-category:nth-child(2) { animation-delay: 1.8s; }
+        .genre-category:nth-child(3) { animation-delay: 1.9s; }
+        
+        .genre-category h3 {
+            color: #ff6b6b;
+            border-bottom: 2px solid #444;
+            padding-bottom: 0.5rem;
             margin-bottom: 1rem;
         }
         
-        .past-concert {
-            opacity: 0.7;
-            border-left-color: #666;
+        .song-list {
+            list-style: none;
         }
         
-        .past-concert:hover {
-            opacity: 0.9;
+        .song-list li {
+            padding: 0.5rem 0;
+            color: #ccc;
+            border-bottom: 1px solid #444;
+            transition: color 0.3s ease;
         }
         
-        .concert-title {
+        .song-list li:hover {
+            color: #ff6b6b;
+        }
+        
+        .song-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .no-events {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .booking-cta {
+            text-align: center;
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #444;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #ff6b6b;
             color: white;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
         
         footer {
@@ -396,7 +440,7 @@
             padding: 1.5rem 0;
             margin-top: 2rem;
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out 2.2s forwards;
+            animation: fadeInUp 0.8s ease-out 2s forwards;
         }
         
         .social-links {
@@ -415,22 +459,15 @@
             color: #ff6b6b;
         }
         
-        /* Мобильная адаптация */
         @media (max-width: 768px) {
-            body {
-                font-size: 14px;
-                line-height: 1.4;
-            }
+            body { font-size: 14px; }
             
             .container {
                 margin: 1rem auto;
                 padding: 1rem;
-                width: 95%;
             }
             
-            header {
-                padding: 0.5rem 0;
-            }
+            header { padding: 0.5rem 0; }
             
             .logo-image {
                 max-width: 250px;
@@ -443,9 +480,24 @@
                 padding: 10px;
             }
             
-            .concert {
+            .concert-item {
                 padding: 1rem;
-                margin-bottom: 1rem;
+            }
+            
+            .repertoire-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .genre-category {
+                padding: 1rem;
+            }
+            
+            .booking-cta {
+                padding: 1.5rem;
+            }
+            
+            .cta-button {
+                padding: 0.8rem 1.5rem;
             }
             
             section {
@@ -453,24 +505,16 @@
                 margin-bottom: 2rem;
             }
             
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h3 {
-                font-size: 1.3rem;
-                margin-bottom: 0.6rem;
-            }
-            
             .mobile-nav ul li a {
                 font-size: 1.8rem;
                 padding: 1rem 2rem;
+            }
+
+            .close-menu {
+                top: 10px;
+                right: 10px;
+                font-size: 1.5rem;
+                padding: 8px;
             }
         }
 
@@ -485,42 +529,25 @@
                 max-height: 80px;
             }
             
-            section {
-                padding: 1rem;
-            }
+            section { padding: 1rem; }
+            
+            .concert-item { padding: 0.8rem; }
             
             .mobile-nav ul li a {
                 font-size: 1.5rem;
                 padding: 0.8rem 1.5rem;
             }
         }
-
-        @media (hover: none) and (pointer: coarse) {
-            .concert:hover {
-                transform: none;
-                background-color: #333;
-            }
-        }
-
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            -webkit-text-size-adjust: 100%;
-            -webkit-font-smoothing: antialiased;
-        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <div class="background-overlay"></div>
+    
     <header>
-        <!-- Фото логотипа вместо текста -->
         <img src="logo.png" alt="ИНФОПОВОД" class="logo-image">
         <div>Кавер-группа на популярные хиты</div>
         
-        <!-- Гамбургер-кнопка - СЛЕВА (ВИДНА ВСЕГДА) -->
         <div class="menu-toggle" id="menuToggle">
             <span></span>
             <span></span>
@@ -528,85 +555,53 @@
         </div>
     </header>
     
-    <!-- Мобильное меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ) -->
-    <!-- В меню всех страниц -->
-<nav class="mobile-nav" id="mobileNav">
-    <ul> 
-        <li><a href="main.html">Главная</a></li>         <!-- ← теперь это основная -->
-        <li><a href="concerts.html">Концерты</a></li>
-        <li><a href="contacts.html">Контакты</a></li>
-    </ul>
-</nav>
+    <nav class="mobile-nav" id="mobileNav">
+        <div class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </div>
+        <ul>
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="concerts.html">Концерты</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+    </nav>
     
     <div class="container">
-        <section>
-            <h1>Ближайшие концерты</h1>
-            <p>Приходите на наши живые выступления! Вот расписание ближайших концертов:</p>
-            
-            <div class="concert">
-                <h3 class="concert-title">🎤 Вечер каверов</h3>
-                <div class="concert-date">15 декабря 2023</div>
-                <div class="concert-place">📍 Клуб "Рок-Сити", ул. Центральная, 15</div>
-                <div class="concert-time">⏰ Начало в 20:00</div>
-                <p>Три часа лучших каверов! От классики рока до современных хитов.</p>
-            </div>
-            
-            <div class="concert">
-                <h3 class="concert-title">🎄 Рождественский концерт</h3>
-                <div class="concert-date">23 декабря 2023</div>
-                <div class="concert-place">📍 Ресторан "Звезда", пр. Победы, 28</div>
-                <div class="concert-time">⏰ Начало в 19:30</div>
-                <p>Специальная рождественская программа с праздничными хитами.</p>
-            </div>
-            
-            <div class="concert">
-                <h3 class="concert-title">🎉 Новогодняя ночь</h3>
-                <div class="concert-date">31 декабря 2023</div>
-                <div class="concert-place">📍 Гостиница "Престиж", ул. Новая, 7</div>
-                <div class="concert-time">⏰ С 22:00 до 04:00</div>
-                <p>Встречаем Новый год вместе! Шесть часов музыки и веселья.</p>
+        <section id="upcoming">
+            <h2>Ближайшие концерты</h2>
+            <div class="concert-list">
+                <div class="concert-item">
+                    <div class="concert-date">15 декабря 2024 • 20:00</div>
+                    <div class="concert-location">Клуб "Акустика", Москва</div>
+                    <div class="concert-description">Вечер каверов на лучшие рок-хиты 80-90х. Только живой звук!</div>
+                </div>
+                
+                <div class="concert-item">
+                    <div class="concert-date">22 декабря 2024 • 19:00</div>
+                    <div class="concert-location">Ресторан "Старый город", Санкт-Петербург</div>
+                    <div class="concert-description">Рождественский вечер с популярными хитами</div>
+                </div>
+                
+                <div class="concert-item">
+                    <div class="concert-date">31 декабря 2024 • 23:00</div>
+                    <div class="concert-location">Гостиница "Престиж", Москва</div>
+                    <div class="concert-description">Новогодний корпоратив. Встречаем Новый год вместе!</div>
+                </div>
             </div>
         </section>
         
-        <section>
-            <h2>Прошедшие выступления</h2>
-            
-            <div class="concert past-concert">
-                <h3 class="concert-title">🎸 Rock Night</h3>
-                <div class="concert-date">10 ноября 2023</div>
-                <div class="concert-place">📍 Бар "Гараж", ул. Индустриальная, 45</div>
-            </div>
-            
-            <div class="concert past-concert">
-                <h3 class="concert-title">💃 Дискотека 80-х</h3>
-                <div class="concert-date">28 октября 2023</div>
-                <div class="concert-place">📍 Клуб "Ретро", ул. Советская, 12</div>
-            </div>
-            
-            <div class="concert past-concert">
-                <h3 class="concert-title">🎵 Акустический вечер</h3>
-                <div class="concert-date">15 октября 2023</div>
-                <div class="concert-place">📍 Кофейня "У камина", ул. Тихая, 3</div>
-            </div>
-        </section>
-        
-        <section>
-            <h2>Хотите нас забронировать?</h2>
-            <p>Мы доступны для выступлений на:</p>
-            <ul>
-                <li>Свадьбах и юбилеях</li>
-                <li>Корпоративных мероприятиях</li>
-                <li>Фестивалях и городских праздниках</li>
-                <li>Открытиях магазинов и ресторанов</li>
-                <li>Частных вечеринках</li>
-            </ul>
-            <p>Перейдите на <a href="contacts.html">страницу контактов</a>, чтобы отправить заявку!</p>
+        <section id="repertoire">
+                    
+        <section class="booking-cta">
+            <h2>Хотите нас на своё мероприятие?</h2>
+            <p>Мы готовы выступить на вашем празднике, корпоративе или частном мероприятии</p>
+            <a href="contacts.html" class="cta-button">Забронировать выступление</a>
         </section>
     </div>
     
     <footer>
         <div class="social-links">
-           <a href="https://vk.com/infopovodcover"><i class="fab fa-vk"></i></a>
+            <a href="https://vk.com/infopovodcover"><i class="fab fa-vk"></i></a>
             <a href="https://t.me/infopovodcover"><i class="fab fa-telegram"></i></a>
             <a href="https://www.instagram.com/infopovod_cover?igsh=MXM5MTd0c3hxYng4bQ"><i class="fab fa-instagram"></i></a>
         </div>
@@ -614,16 +609,21 @@
     </footer>
 
     <script>
-        // Гамбургер-меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ)
+        // Гамбургер-меню
         const menuToggle = document.getElementById('menuToggle');
         const mobileNav = document.getElementById('mobileNav');
+        const closeMenu = document.getElementById('closeMenu');
 
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             mobileNav.classList.toggle('active');
         });
 
-        // Закрытие меню при клике на ссылку
+        closeMenu.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            mobileNav.classList.remove('active');
+        });
+
         const mobileLinks = mobileNav.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -632,9 +632,15 @@
             });
         });
 
-        // Закрытие меню при клике вне его
         document.addEventListener('click', function(e) {
-            if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+            if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target) && !closeMenu.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 menuToggle.classList.remove('active');
                 mobileNav.classList.remove('active');
             }
