@@ -13,12 +13,6 @@
         }
         
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('fon2.jpg') center/cover fixed no-repeat;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -26,16 +20,28 @@
             color: white;
             opacity: 0;
             animation: fadeInBody 1.5s ease-out forwards;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
 
-        /* Анимация появления всей страницы */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('fon2.jpg') center/cover no-repeat;
+            z-index: -2;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
         @keyframes fadeInBody {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         header {
@@ -48,7 +54,6 @@
             animation: fadeInDown 1s ease-out 0.5s forwards;
         }
 
-        /* Анимация появления сверху */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -60,7 +65,6 @@
             }
         }
         
-        /* Логотип как изображение - БЕЗ РАМКИ */
         .logo-image {
             max-width: 300px;
             max-height: 120px;
@@ -70,11 +74,8 @@
             border: none;
             display: block;
             margin: 0 auto 0.5rem auto;
-            outline: none;
-            box-shadow: none;
         }
         
-        /* Гамбургер-меню - СЛЕВА (ВИДНО ВСЕГДА) */
         .menu-toggle {
             display: flex;
             flex-direction: column;
@@ -91,7 +92,6 @@
             animation: fadeInLeft 1s ease-out 0.8s forwards;
         }
 
-        /* Анимация появления слева */
         @keyframes fadeInLeft {
             from {
                 opacity: 0;
@@ -115,7 +115,6 @@
             transition: 0.3s;
         }
         
-        /* Анимация гамбургера в крестик */
         .menu-toggle.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
@@ -147,13 +146,30 @@
             display: flex;
             opacity: 1;
         }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1002;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .mobile-nav.active .close-menu {
+            display: block;
+        }
         
         .mobile-nav ul {
             list-style: none;
             text-align: center;
         }
         
-        /* Анимация плавного выезжания вкладок */
         .mobile-nav ul li {
             margin: 2.5rem 0;
             transform: translateX(-150px) rotate(-10deg);
@@ -168,17 +184,9 @@
             filter: blur(0);
         }
 
-        .mobile-nav.active ul li:nth-child(1) {
-            transition-delay: 0.15s;
-        }
-
-        .mobile-nav.active ul li:nth-child(2) {
-            transition-delay: 0.25s;
-        }
-
-        .mobile-nav.active ul li:nth-child(3) {
-            transition-delay: 0.35s;
-        }
+        .mobile-nav.active ul li:nth-child(1) { transition-delay: 0.15s; }
+        .mobile-nav.active ul li:nth-child(2) { transition-delay: 0.25s; }
+        .mobile-nav.active ul li:nth-child(3) { transition-delay: 0.35s; }
 
         .mobile-nav ul li a {
             color: white;
@@ -228,11 +236,6 @@
             left: 100%;
         }
         
-        /* Обычное меню - СКРЫВАЕМ ВСЕГДА */
-        nav.desktop-nav {
-            display: none;
-        }
-        
         .container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -241,7 +244,6 @@
             animation: fadeInUp 1s ease-out 1s forwards;
         }
 
-        /* Анимация появления снизу */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -255,7 +257,6 @@
         
         section {
             margin-bottom: 3rem;
-            /* СЕРЫЙ ФОН как в хедере */
             background-color: #222;
             padding: 2rem;
             border-radius: 5px;
@@ -265,7 +266,6 @@
             animation: fadeInSection 0.8s ease-out forwards;
         }
 
-        /* Анимация для секций с задержкой */
         @keyframes fadeInSection {
             from {
                 opacity: 0;
@@ -277,18 +277,9 @@
             }
         }
 
-        /* Разные задержки для секций */
-        section:nth-child(1) {
-            animation-delay: 1.2s;
-        }
-
-        section:nth-child(2) {
-            animation-delay: 1.4s;
-        }
-
-        section:nth-child(3) {
-            animation-delay: 1.6s;
-        }
+        #contact-form { animation-delay: 1.2s; }
+        #contact-info { animation-delay: 1.4s; }
+        #faq { animation-delay: 1.6s; }
         
         h1, h2, h3 {
             margin-bottom: 1rem;
@@ -300,56 +291,17 @@
             line-height: 1.6;
         }
         
-        .contact-info {
+        .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .contact-item {
-            padding: 1.5rem;
-            background-color: #333;
-            border-radius: 8px;
-            border-left: 4px solid #444;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        /* Задержки для контактных элементов */
-        .contact-item:nth-child(1) { animation-delay: 1.6s; }
-        .contact-item:nth-child(2) { animation-delay: 1.7s; }
-        .contact-item:nth-child(3) { animation-delay: 1.8s; }
-        .contact-item:nth-child(4) { animation-delay: 1.9s; }
-        
-        .contact-item h3 {
-            color: white;
-            margin-bottom: 1rem;
-        }
-        
-        .contact-item p {
-            color: #ccc;
-            margin-bottom: 0.5rem;
         }
         
         .form-group {
             display: flex;
             flex-direction: column;
             margin-bottom: 1.2rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease-out forwards;
         }
-
-        /* Задержки для полей формы */
-        .form-group:nth-child(1) { animation-delay: 1.8s; }
-        .form-group:nth-child(2) { animation-delay: 1.9s; }
-        .form-group:nth-child(3) { animation-delay: 2.0s; }
-        .form-group:nth-child(4) { animation-delay: 2.1s; }
-        .form-group:nth-child(5) { animation-delay: 2.2s; }
-        .form-group:nth-child(6) { animation-delay: 2.3s; }
-        .form-group:nth-child(7) { animation-delay: 2.4s; }
         
         label {
             margin-bottom: 0.5rem;
@@ -357,17 +309,18 @@
             color: white;
         }
         
-        input, textarea {
+        input, textarea, select {
             padding: 0.8rem;
             border: 1px solid #444;
             border-radius: 5px;
             font-size: 1rem;
+            transition: all 0.3s ease;
             background: #333;
             color: white;
-            transition: all 0.3s ease;
+            -webkit-appearance: none;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #ff6b6b;
             box-shadow: 0 0 0 2px rgba(255,107,107,0.2);
@@ -383,9 +336,9 @@
         }
         
         button[type="submit"] {
-            background-color: #444;
+            background-color: #ff6b6b;
             color: white;
-            padding: 1rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -393,15 +346,159 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             margin-top: 0.5rem;
-            width: 100%;
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out 2.6s forwards;
+            animation: fadeInUp 0.8s ease-out 2.2s forwards;
         }
         
         button[type="submit"]:hover {
-            background-color: #555;
+            background-color: #ff5252;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #333;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .contact-method:nth-child(1) { animation-delay: 1.5s; }
+        .contact-method:nth-child(2) { animation-delay: 1.6s; }
+        .contact-method:nth-child(3) { animation-delay: 1.7s; }
+        .contact-method:nth-child(4) { animation-delay: 1.8s; }
+        
+        .contact-method:hover {
+            transform: translateX(-10px);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-right: 1rem;
+            width: 50px;
+            text-align: center;
+        }
+        
+        .contact-details h3 {
+            margin-bottom: 0.2rem;
+            color: white;
+        }
+        
+        .contact-details p {
+            color: #ccc;
+            margin-bottom: 0;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            background: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .faq-item:nth-child(1) { animation-delay: 1.7s; }
+        .faq-item:nth-child(2) { animation-delay: 1.8s; }
+        .faq-item:nth-child(3) { animation-delay: 1.9s; }
+        .faq-item:nth-child(4) { animation-delay: 2.0s; }
+        
+        .faq-question {
+            padding: 1rem;
+            background: #444;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: #555;
+        }
+        
+        .faq-question h3 {
+            margin-bottom: 0;
+            color: white;
+        }
+        
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #ccc;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 1rem;
+            max-height: 500px;
+        }
+        
+        .faq-toggle {
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+        
+        .social-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .social-links-large {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .social-links-large a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links-large a:hover {
+            background: #ff6b6b;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
         
         footer {
@@ -428,22 +525,6 @@
 
         .social-links a:hover {
             color: #ff6b6b;
-        }
-
-        .social-section {
-            text-align: center;
-        }
-
-        .social-section .social-links a {
-            color: white;
-            font-size: 2rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-section .social-links a:hover {
-            color: #ff6b6b;
-            transform: scale(1.2);
         }
         
         .modal {
@@ -495,22 +576,15 @@
             margin-bottom: 1rem;
         }
         
-        /* Мобильная адаптация */
         @media (max-width: 768px) {
-            body {
-                font-size: 14px;
-                line-height: 1.4;
-            }
+            body { font-size: 14px; }
             
             .container {
                 margin: 1rem auto;
                 padding: 1rem;
-                width: 95%;
             }
             
-            header {
-                padding: 0.5rem 0;
-            }
+            header { padding: 0.5rem 0; }
             
             .logo-image {
                 max-width: 250px;
@@ -523,23 +597,36 @@
                 padding: 10px;
             }
             
-            .contact-info {
+            .contact-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.5rem;
             }
             
-            .form-group {
-                margin-bottom: 1rem;
-            }
+            .form-group { margin-bottom: 1rem; }
             
-            input, textarea {
+            input, textarea, select {
                 padding: 0.7rem;
                 font-size: 16px;
             }
             
             button[type="submit"] {
-                padding: 0.8rem;
+                padding: 0.8rem 1.5rem;
                 font-size: 16px;
+            }
+            
+            .contact-method {
+                padding: 0.8rem;
+            }
+            
+            .contact-icon {
+                font-size: 1.5rem;
+                width: 40px;
+            }
+            
+            .social-links-large a {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
             }
             
             .modal-content {
@@ -553,29 +640,16 @@
                 margin-bottom: 2rem;
             }
             
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h3 {
-                font-size: 1.3rem;
-                margin-bottom: 0.6rem;
-            }
-            
             .mobile-nav ul li a {
                 font-size: 1.8rem;
                 padding: 1rem 2rem;
             }
 
-            .social-section .social-links a {
-                font-size: 1.8rem;
-                margin: 0 0.8rem;
+            .close-menu {
+                top: 10px;
+                right: 10px;
+                font-size: 1.5rem;
+                padding: 8px;
             }
         }
 
@@ -590,8 +664,20 @@
                 max-height: 80px;
             }
             
-            section {
-                padding: 1rem;
+            section { padding: 1rem; }
+            
+            .contact-method {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            .social-links-large {
+                flex-wrap: wrap;
             }
             
             .modal-content {
@@ -603,43 +689,17 @@
                 font-size: 1.5rem;
                 padding: 0.8rem 1.5rem;
             }
-
-            .social-section .social-links a {
-                font-size: 1.5rem;
-                margin: 0 0.5rem;
-            }
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            button:hover {
-                background-color: #444;
-                transform: none;
-            }
-
-            .social-section .social-links a:hover {
-                transform: none;
-            }
-        }
-
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            -webkit-text-size-adjust: 100%;
-            -webkit-font-smoothing: antialiased;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <div class="background-overlay"></div>
+    
     <header>
-        <!-- Фото логотипа вместо текста -->
         <img src="logo.png" alt="ИНФОПОВОД" class="logo-image">
         <div>Кавер-группа на популярные хиты</div>
         
-        <!-- Гамбургер-кнопка - СЛЕВА (ВИДНА ВСЕГДА) -->
         <div class="menu-toggle" id="menuToggle">
             <span></span>
             <span></span>
@@ -647,87 +707,182 @@
         </div>
     </header>
     
-    <!-- Мобильное меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ) -->
-    <!-- В меню всех страниц -->
-<nav class="mobile-nav" id="mobileNav">
-    <ul>
-        <li><a href="main.html">Главная</a></li>         <!-- ← теперь это основная -->
-        <li><a href="concerts.html">Концерты</a></li>
-        <li><a href="contacts.html">Контакты</a></li>
-    </ul>
-</nav>
+    <nav class="mobile-nav" id="mobileNav">
+        <div class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </div>
+        <ul>
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="concerts.html">Концерты</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+    </nav>
     
     <div class="container">
-        <section>
-            <h1>Свяжитесь с нами</h1>
-            <p>Хотите заказать выступление или получить дополнительную информацию? Мы всегда рады общению!</p>
-            
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h3>📞 Телефон</h3>
-                    <p>+7 (XXX) XXX-XX-XX</p>
-                    <p>+7 (XXX) XXX-XX-XX</p>
-                </div>
-                
-                <div class="contact-item">
-                    <h3>✉️ Email</h3>
-                    <p>info@infopovod.ru</p>
-                    <p>booking@infopovod.ru</p>
-                </div>
-                
-                <div class="contact-item">
-                    <h3>🕒 Время связи</h3>
-                    <p>Пн-Пт: 10:00 - 22:00</p>
-                    <p>Сб-Вс: 12:00 - 20:00</p>
-                </div>
-            </div>
-        </section>
-        
-        <section>
-            <h2>Заказать выступление</h2>
+        <section id="contact-form">
+            <h2>Свяжитесь с нами</h2>
             <p>Заполните форму ниже, и мы свяжемся с вами в ближайшее время для обсуждения деталей вашего мероприятия.</p>
             
-            <form id="booking-form">
-                <div class="form-group">
-                    <label for="name">Ваше имя *</label>
-                    <input type="text" id="name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Телефон *</label>
-                    <input type="tel" id="phone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="event-type">Тип мероприятия</label>
-                    <input type="text" id="event-type" placeholder="Свадьба, корпоратив, день рождения...">
-                </div>
-                
-                <div class="form-group">
-                    <label for="event-date">Дата мероприятия</label>
-                    <input type="date" id="event-date">
-                </div>
-                
-                <div class="form-group">
-                    <label for="guests">Количество гостей</label>
-                    <input type="number" id="guests" min="1">
-                </div>
-                
-                <div class="form-group">
-                    <label for="message">Дополнительная информация</label>
-                    <textarea id="message" placeholder="Место проведения, пожелания по репертуару, особые требования..."></textarea>
+            <form id="contactForm">
+                <div class="contact-grid">
+                    <div>
+                        <div class="form-group">
+                            <label for="name">Ваше имя *</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="event-type">Тип мероприятия</label>
+                            <select id="event-type">
+                                <option value="">Выберите тип мероприятия</option>
+                                <option value="wedding">Свадьба</option>
+                                <option value="corporate">Корпоратив</option>
+                                <option value="birthday">День рождения</option>
+                                <option value="concert">Концерт</option>
+                                <option value="other">Другое</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label for="event-date">Дата мероприятия</label>
+                            <input type="date" id="event-date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="budget">Примерный бюджет</label>
+                            <select id="budget">
+                                <option value="">Выберите бюджет</option>
+                                <option value="low">До 20 000 руб.</option>
+                                <option value="medium">20 000 - 50 000 руб.</option>
+                                <option value="high">50 000 - 100 000 руб.</option>
+                                <option value="premium">Свыше 100 000 руб.</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Детали мероприятия *</label>
+                            <textarea id="message" required placeholder="Место проведения, количество гостей, пожелания по репертуару..."></textarea>
+                        </div>
+                    </div>
                 </div>
                 
                 <button type="submit">Отправить заявку</button>
             </form>
         </section>
         
-        <section class="social-section">
+        <section id="contact-info">
+            <h2>Наши контакты</h2>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Телефон</h3>
+                        <p>+7 (XXX) XXX-XX-XX</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Email</h3>
+                        <p>info@infopovod.ru</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Адрес</h3>
+                        <p>Москва, ул. Примерная, д. 123</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Время работы</h3>
+                        <p>Пн-Пт: 10:00 - 22:00<br>Сб-Вс: 12:00 - 00:00</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-section">
+                <h3>Мы в социальных сетях</h3>
+                <div class="social-links-large">
+                    <a href="https://vk.com/infopovodcover"><i class="fab fa-vk"></i></a>
+                    <a href="https://t.me/infopovodcover"><i class="fab fa-telegram"></i></a>
+                    <a href="https://www.instagram.com/infopovod_cover?igsh=MXM5MTd0c3hxYng4bQ"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="faq">
+            <h2>Часто задаваемые вопросы</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Как забронировать выступление группы?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Для бронирования выступления заполните форму на этой странице или свяжитесь с нами по телефону. Мы обсудим детали вашего мероприятия, согласуем дату и репертуар.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>За сколько времени нужно бронировать выступление?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Рекомендуем бронировать выступление за 2-4 недели до мероприятия. В пиковый сезон (май-сентябрь, декабрь) лучше бронировать за 1-2 месяца.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Можно ли заказать конкретные песни?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Да, конечно! Мы готовы разучить до 3 новых песен специально для вашего мероприятия. Об этом нужно сообщить при бронировании за 3-4 недели до события.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Какое оборудование вы привозите с собой?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Мы привозим полный комплект профессионального оборудования: ударную установку, гитарные и басовые комбики, клавишные, микрофоны и PA-систему. Нам нужна только розетка 220В.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
     <div id="success-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -735,7 +890,7 @@
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2>Заявка отправлена!</h2>
-            <p>Мы свяжемся с вами в течение 24 часов.</p>
+            <p>Мы свяжемся с вами в течение 24 часов для уточнения деталей.</p>
         </div>
     </div>
     
@@ -749,16 +904,21 @@
     </footer>
 
     <script>
-        // Гамбургер-меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ)
+        // Гамбургер-меню
         const menuToggle = document.getElementById('menuToggle');
         const mobileNav = document.getElementById('mobileNav');
+        const closeMenu = document.getElementById('closeMenu');
 
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             mobileNav.classList.toggle('active');
         });
 
-        // Закрытие меню при клике на ссылку
+        closeMenu.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            mobileNav.classList.remove('active');
+        });
+
         const mobileLinks = mobileNav.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -767,16 +927,31 @@
             });
         });
 
-        // Закрытие меню при клике вне его
         document.addEventListener('click', function(e) {
-            if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+            if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target) && !closeMenu.contains(e.target)) {
                 menuToggle.classList.remove('active');
                 mobileNav.classList.remove('active');
             }
         });
 
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                menuToggle.classList.remove('active');
+                mobileNav.classList.remove('active');
+            }
+        });
+
+        // FAQ аккордеон
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
         // Форма заявки
-        document.getElementById('booking-form').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             document.getElementById('success-modal').style.display = 'block';
             this.reset();
