@@ -13,12 +13,6 @@
         }
         
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('fon2.jpg') center/cover fixed no-repeat;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -26,19 +20,31 @@
             color: white;
             opacity: 0;
             animation: fadeInBody 1.5s ease-out forwards;
-            /* Исправление для iOS */
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
 
-        /* Анимация появления всей страницы */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('fon2.jpg') center/cover no-repeat;
+            z-index: -2;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
+        }
+
         @keyframes fadeInBody {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         header {
@@ -51,7 +57,6 @@
             animation: fadeInDown 1s ease-out 0.5s forwards;
         }
 
-        /* Анимация появления сверху */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -63,7 +68,6 @@
             }
         }
         
-        /* Логотип как изображение - БЕЗ РАМКИ */
         .logo-image {
             max-width: 300px;
             max-height: 120px;
@@ -75,12 +79,10 @@
             margin: 0 auto 0.5rem auto;
             outline: none;
             box-shadow: none;
-            /* Исправление для iOS */
             -webkit-user-select: none;
             -webkit-touch-callout: none;
         }
         
-        /* Гамбургер-меню - СЛЕВА (ВИДНО ВСЕГДА) */
         .menu-toggle {
             display: flex;
             flex-direction: column;
@@ -95,11 +97,9 @@
             transition: background 0.3s ease;
             opacity: 0;
             animation: fadeInLeft 1s ease-out 0.8s forwards;
-            /* Исправление для iOS */
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Анимация появления слева */
         @keyframes fadeInLeft {
             from {
                 opacity: 0;
@@ -123,7 +123,6 @@
             transition: 0.3s;
         }
         
-        /* Анимация гамбургера в крестик */
         .menu-toggle.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
@@ -156,7 +155,6 @@
             opacity: 1;
         }
 
-        /* Кнопка закрытия меню */
         .close-menu {
             position: absolute;
             top: 20px;
@@ -169,6 +167,7 @@
             background: rgba(0,0,0,0.7);
             border-radius: 5px;
             display: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mobile-nav.active .close-menu {
@@ -180,7 +179,6 @@
             text-align: center;
         }
         
-        /* Анимация плавного выезжания вкладок */
         .mobile-nav ul li {
             margin: 2.5rem 0;
             transform: translateX(-150px) rotate(-10deg);
@@ -195,17 +193,9 @@
             filter: blur(0);
         }
 
-        .mobile-nav.active ul li:nth-child(1) {
-            transition-delay: 0.15s;
-        }
-
-        .mobile-nav.active ul li:nth-child(2) {
-            transition-delay: 0.25s;
-        }
-
-        .mobile-nav.active ul li:nth-child(3) {
-            transition-delay: 0.35s;
-        }
+        .mobile-nav.active ul li:nth-child(1) { transition-delay: 0.15s; }
+        .mobile-nav.active ul li:nth-child(2) { transition-delay: 0.25s; }
+        .mobile-nav.active ul li:nth-child(3) { transition-delay: 0.35s; }
 
         .mobile-nav ul li a {
             color: white;
@@ -220,7 +210,6 @@
             overflow: hidden;
             background: rgba(255,255,255,0.05);
             transform: scale(0.8);
-            /* Исправление для iOS */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -257,7 +246,6 @@
             left: 100%;
         }
         
-        /* Обычное меню - СКРЫВАЕМ ВСЕГДА */
         nav.desktop-nav {
             display: none;
         }
@@ -270,7 +258,6 @@
             animation: fadeInUp 1s ease-out 1s forwards;
         }
 
-        /* Анимация появления снизу */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -284,7 +271,6 @@
         
         section {
             margin-bottom: 3rem;
-            /* СЕРЫЙ ФОН как в хедере */
             background-color: #222;
             padding: 2rem;
             border-radius: 5px;
@@ -294,7 +280,6 @@
             animation: fadeInSection 0.8s ease-out forwards;
         }
 
-        /* Анимация для секций с задержкой */
         @keyframes fadeInSection {
             from {
                 opacity: 0;
@@ -306,22 +291,10 @@
             }
         }
 
-        /* Разные задержки для секций */
-        #about {
-            animation-delay: 1.2s;
-        }
-
-        #members {
-            animation-delay: 1.4s;
-        }
-
-        #gallery {
-            animation-delay: 1.6s;
-        }
-
-        #contacts {
-            animation-delay: 1.8s;
-        }
+        #about { animation-delay: 1.2s; }
+        #members { animation-delay: 1.4s; }
+        #gallery { animation-delay: 1.6s; }
+        #contacts { animation-delay: 1.8s; }
         
         h1, h2, h3 {
             margin-bottom: 1rem;
@@ -348,7 +321,6 @@
             animation: fadeInScale 0.6s ease-out forwards;
         }
 
-        /* Анимация появления с масштабированием для участников */
         @keyframes fadeInScale {
             from {
                 opacity: 0;
@@ -360,7 +332,6 @@
             }
         }
 
-        /* Задержки для участников */
         .member:nth-child(1) { animation-delay: 1.6s; }
         .member:nth-child(2) { animation-delay: 1.7s; }
         .member:nth-child(3) { animation-delay: 1.8s; }
@@ -374,7 +345,6 @@
             margin-bottom: 1rem;
             border: 3px solid #444;
             transition: transform 0.3s ease;
-            /* Исправление для iOS - предотвращает масштабирование */
             -webkit-user-select: none;
             -webkit-touch-callout: none;
             -webkit-user-drag: none;
@@ -410,15 +380,12 @@
             transform: translateY(20px);
             animation: fadeInUp 0.6s ease-out forwards;
             border: 2px solid #444;
-            /* Исправление для iOS - предотвращает масштабирование */
             -webkit-user-select: none;
             -webkit-touch-callout: none;
             -webkit-user-drag: none;
-            /* Отключает масштабирование при двойном тапе */
             touch-action: manipulation;
         }
 
-        /* Задержки для галереи */
         .gallery img:nth-child(1) { animation-delay: 1.8s; }
         .gallery img:nth-child(2) { animation-delay: 1.9s; }
         .gallery img:nth-child(3) { animation-delay: 2.0s; }
@@ -467,7 +434,6 @@
             transition: all 0.3s ease;
             background: #333;
             color: white;
-            /* Исправление для iOS */
             -webkit-appearance: none;
             border-radius: 5px;
         }
@@ -501,7 +467,6 @@
             width: 100%;
             opacity: 0;
             animation: fadeInUp 0.8s ease-out 2.2s forwards;
-            /* Исправление для iOS */
             -webkit-appearance: none;
         }
         
@@ -531,7 +496,6 @@
             font-size: 1.5rem;
             text-decoration: none;
             transition: color 0.3s ease;
-            /* Исправление для iOS */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -588,12 +552,8 @@
             margin-bottom: 1rem;
         }
         
-        /* Мобильная адаптация */
         @media (max-width: 768px) {
-            body {
-                font-size: 14px;
-                line-height: 1.4;
-            }
+            body { font-size: 14px; line-height: 1.4; }
             
             .container {
                 margin: 1rem auto;
@@ -601,9 +561,7 @@
                 width: 95%;
             }
             
-            header {
-                padding: 0.5rem 0;
-            }
+            header { padding: 0.5rem 0; }
             
             .logo-image {
                 max-width: 250px;
@@ -636,13 +594,9 @@
                 gap: 0.8rem;
             }
             
-            .gallery img {
-                height: 150px;
-            }
+            .gallery img { height: 150px; }
             
-            .form-group {
-                margin-bottom: 1rem;
-            }
+            .form-group { margin-bottom: 1rem; }
             
             input, textarea {
                 padding: 0.7rem;
@@ -660,29 +614,16 @@
                 width: 85%;
             }
             
-            .video-container {
-                margin-bottom: 0.5rem;
-            }
+            .video-container { margin-bottom: 0.5rem; }
             
             section {
                 padding: 1.5rem;
                 margin-bottom: 2rem;
             }
             
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            h3 {
-                font-size: 1.3rem;
-                margin-bottom: 0.6rem;
-            }
+            h1 { font-size: 1.8rem; margin-bottom: 0.8rem; }
+            h2 { font-size: 1.5rem; margin-bottom: 0.8rem; }
+            h3 { font-size: 1.3rem; margin-bottom: 0.6rem; }
             
             .mobile-nav ul li a {
                 font-size: 1.8rem;
@@ -713,13 +654,9 @@
                 height: 100px;
             }
             
-            .gallery img {
-                height: 120px;
-            }
+            .gallery img { height: 120px; }
             
-            section {
-                padding: 1rem;
-            }
+            section { padding: 1rem; }
             
             .modal-content {
                 margin: 40% auto;
@@ -731,16 +668,35 @@
                 padding: 0.8rem 1.5rem;
             }
         }
+
+        @media (hover: none) and (pointer: coarse) {
+            .member img:hover,
+            .gallery img:hover,
+            button:hover {
+                transform: none;
+            }
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <!-- Фоновый элемент -->
+    <div class="background-overlay"></div>
+    
     <header>
-        <!-- Фото логотипа вместо текста -->
         <img src="logo.png" alt="ИНФОПОВОД" class="logo-image">
         <div>Кавер-группа на популярные хиты</div>
         
-        <!-- Гамбургер-кнопка - СЛЕВА (ВИДНА ВСЕГДА) -->
         <div class="menu-toggle" id="menuToggle">
             <span></span>
             <span></span>
@@ -748,9 +704,7 @@
         </div>
     </header>
     
-    <!-- Мобильное меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ) -->
     <nav class="mobile-nav" id="mobileNav">
-        <!-- Кнопка закрытия меню -->
         <div class="close-menu" id="closeMenu">
             <i class="fas fa-times"></i>
         </div>
@@ -800,7 +754,7 @@
                 <img src="f1.jpg" alt="Выступление 1">
                 <img src="f2.jpg" alt="Выступление 2">
                 <img src="f3.jpg" alt="Выступление 3">
-		        <img src="f4.jpg" alt="Выступление 4">
+                <img src="f4.jpg" alt="Выступление 4">
             </div>
         </section>
         
@@ -859,24 +813,21 @@
     </footer>
 
     <script>
-        // Гамбургер-меню (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ)
+        // Гамбургер-меню
         const menuToggle = document.getElementById('menuToggle');
         const mobileNav = document.getElementById('mobileNav');
         const closeMenu = document.getElementById('closeMenu');
 
-        // Открытие меню
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             mobileNav.classList.toggle('active');
         });
 
-        // Закрытие меню по кнопке
         closeMenu.addEventListener('click', function() {
             menuToggle.classList.remove('active');
             mobileNav.classList.remove('active');
         });
 
-        // Закрытие меню при клике на ссылку
         const mobileLinks = mobileNav.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -885,7 +836,6 @@
             });
         });
 
-        // Закрытие меню при клике вне его
         document.addEventListener('click', function(e) {
             if (!menuToggle.contains(e.target) && !mobileNav.contains(e.target) && !closeMenu.contains(e.target)) {
                 menuToggle.classList.remove('active');
@@ -893,7 +843,6 @@
             }
         });
 
-        // Закрытие меню по клавише Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 menuToggle.classList.remove('active');
@@ -918,7 +867,7 @@
             }
         });
 
-        // Предотвращение масштабирования изображений на iOS
+        // Предотвращение масштабирования на iOS
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length > 1) {
                 e.preventDefault();
@@ -933,6 +882,15 @@
             }
             lastTouchEnd = now;
         }, false);
+
+        const background = document.querySelector('.background-overlay');
+        if (background) {
+            background.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
