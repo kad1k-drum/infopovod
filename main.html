@@ -475,6 +475,13 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
+
+        button[type="submit"]:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
         
         footer {
             background-color: #222;
@@ -548,8 +555,37 @@
         
         .modal-icon {
             font-size: 3rem;
-            color: #4CAF50;
             margin-bottom: 1rem;
+        }
+        
+        .modal-icon.success {
+            color: #4CAF50;
+        }
+        
+        .modal-icon.error {
+            color: #ff6b6b;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         @media (max-width: 768px) {
@@ -766,24 +802,33 @@
                 <div class="form-group">
                     <label for="name">Ваше имя</label>
                     <input type="text" id="name" required>
+                    <div class="error-message" id="name-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" required>
+                    <div class="error-message" id="email-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone">Телефон</label>
-                    <input type="tel" id="phone">
+                    <input type="tel" id="phone" required>
+                    <div class="error-message" id="phone-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="message">Детали мероприятия</label>
                     <textarea id="message" required placeholder="Дата, место, пожелания по репертуару..."></textarea>
+                    <div class="error-message" id="message-error"></div>
                 </div>
                 
-                <button type="submit">Отправить заявку</button>
+                <button type="submit" id="submit-btn">
+                    <span id="submit-text">Отправить заявку</span>
+                    <span id="submit-loader" style="display: none;">
+                        <div class="loading-spinner"></div>Отправка...
+                    </span>
+                </button>
             </form>
             
             <h3>Контакты</h3>
@@ -792,14 +837,27 @@
         </section>
     </div>
     
+    <!-- Модальное окно успеха -->
     <div id="success-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <div class="modal-icon">
+            <div class="modal-icon success">
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2>Заявка отправлена!</h2>
             <p>Мы свяжемся с вами в течение 24 часов.</p>
+        </div>
+    </div>
+    
+    <!-- Модальное окно ошибки -->
+    <div id="error-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-icon error">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h2>Ошибка отправки</h2>
+            <p>Попробуйте еще раз или свяжитесь с нами по телефону.</p>
         </div>
     </div>
     
@@ -813,6 +871,12 @@
     </footer>
 
     <script>
+        // ========== КОНФИГУРАЦИЯ ТЕЛЕГРАМ БОТА ==========
+        // ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА СВОИ:
+        const TELEGRAM_BOT_TOKEN ='8234008996:AAFR3wBIQifnDARo_YJs9u9ezH0W9ZfTgWg'; // Получите у @BotFather
+        const TELEGRAM_CHAT_ID = '1049006973'; // Узнайте у @userinfobot
+        // ==============================================
+        
         // Гамбургер-меню
         const menuToggle = document.getElementById('menuToggle');
         const mobileNav = document.getElementById('mobileNav');
@@ -850,21 +914,188 @@
             }
         });
 
-        // Форма заявки
-        document.getElementById('booking-form').addEventListener('submit', function(e) {
+        // Маска для телефона
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 1) {
+                    value = '+7' + value;
+                } else if (value.length <= 4) {
+                    value = '+7 (' + value.substring(1, 4);
+                } else if (value.length <= 7) {
+                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7);
+                } else if (value.length <= 9) {
+                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9);
+                } else {
+                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9) + '-' + value.substring(9, 11);
+                }
+            }
+            this.value = value;
+        });
+
+        // Функция для скрытия ошибок
+        function hideAllErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+        }
+
+        // Функция для показа ошибки
+        function showError(fieldId, message) {
+            const errorEl = document.getElementById(fieldId + '-error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+            }
+        }
+
+        // Валидация формы
+        function validateForm() {
+            let isValid = true;
+            hideAllErrors();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            if (name.length < 2) {
+                showError('name', 'Имя должно содержать не менее 2 символов');
+                isValid = false;
+            }
+            
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                showError('email', 'Введите корректный email адрес');
+                isValid = false;
+            }
+            
+            if (phone.replace(/\D/g, '').length < 11) {
+                showError('phone', 'Введите корректный номер телефона');
+                isValid = false;
+            }
+            
+            if (message.length < 10) {
+                showError('message', 'Сообщение должно содержать не менее 10 символов');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Форма заявки с отправкой в Telegram
+        document.getElementById('booking-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            document.getElementById('success-modal').style.display = 'block';
-            this.reset();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitLoader = document.getElementById('submit-loader');
+            
+            // Показываем загрузку
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            submitLoader.style.display = 'inline';
+            
+            try {
+                // Собираем данные формы
+                const formData = {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    message: document.getElementById('message').value.trim(),
+                    date: new Date().toLocaleString('ru-RU'),
+                    page: window.location.href
+                };
+                
+                // Формируем сообщение для Telegram
+                let telegramMessage = `🎸 <b>НОВАЯ ЗАЯВКА ИНФОПОВОД!</b>\n\n`;
+                telegramMessage += `👤 <b>Имя:</b> ${formData.name}\n`;
+                telegramMessage += `📧 <b>Email:</b> ${formData.email}\n`;
+                telegramMessage += `📱 <b>Телефон:</b> ${formData.phone}\n\n`;
+                telegramMessage += `💬 <b>Сообщение:</b>\n${formData.message}\n\n`;
+                telegramMessage += `⏰ <b>Время отправки:</b> ${formData.date}\n`;
+                telegramMessage += `🔗 <b>Страница:</b> ${formData.page}`;
+                
+                // Отправляем в Telegram
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: telegramMessage,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    // Показываем окно успеха
+                    document.getElementById('success-modal').style.display = 'block';
+                    // Очищаем форму
+                    this.reset();
+                } else {
+                    throw new Error('Telegram API error: ' + JSON.stringify(result));
+                }
+                
+            } catch (error) {
+                console.error('Ошибка отправки заявки:', error);
+                // Показываем окно ошибки
+                document.getElementById('error-modal').style.display = 'block';
+            } finally {
+                // Восстанавливаем кнопку
+                submitBtn.disabled = false;
+                submitText.style.display = 'inline';
+                submitLoader.style.display = 'none';
+            }
         });
         
-        document.querySelector('.close-btn').addEventListener('click', function() {
-            document.getElementById('success-modal').style.display = 'none';
+        // Закрытие модальных окон
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
         });
         
         window.addEventListener('click', function(e) {
-            if (e.target == document.getElementById('success-modal')) {
-                document.getElementById('success-modal').style.display = 'none';
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
             }
+        });
+
+        // Сохранение данных формы при обновлении страницы
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedForm = localStorage.getItem('infopovodFormDraft');
+            if (savedForm) {
+                const formData = JSON.parse(savedForm);
+                document.getElementById('name').value = formData.name || '';
+                document.getElementById('email').value = formData.email || '';
+                document.getElementById('phone').value = formData.phone || '';
+                document.getElementById('message').value = formData.message || '';
+            }
+        });
+
+        // Автосохранение формы
+        document.getElementById('booking-form').addEventListener('input', function() {
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value
+            };
+            localStorage.setItem('infopovodFormDraft', JSON.stringify(formData));
+        });
+
+        // Очистка сохраненных данных при успешной отправке
+        document.getElementById('booking-form').addEventListener('submit', function() {
+            localStorage.removeItem('infopovodFormDraft');
         });
 
         // Предотвращение масштабирования на iOS
@@ -891,6 +1122,13 @@
                 }
             }, { passive: false });
         }
+        
+        // Проверка конфигурации при загрузке
+        window.addEventListener('load', function() {
+            if (TELEGRAM_BOT_TOKEN === 'ВАШ_ТОКЕН_БОТА' || TELEGRAM_CHAT_ID === 'ВАШ_CHAT_ID') {
+                console.warn('⚠️ ВНИМАНИЕ: Не забудьте заменить TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID на свои данные!');
+            }
+        });
     </script>
 </body>
 </html>
