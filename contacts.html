@@ -854,25 +854,67 @@
             }
         });
 
-        // Маска для телефона
-        const phoneInput = document.getElementById('phone');
-        phoneInput.addEventListener('input', function(e) {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                if (value.length <= 1) {
-                    value = '+7' + value;
-                } else if (value.length <= 4) {
-                    value = '+7 (' + value.substring(1, 4);
-                } else if (value.length <= 7) {
-                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7);
-                } else if (value.length <= 9) {
-                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9);
-                } else {
-                    value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9) + '-' + value.substring(9, 11);
-                }
-            }
-            this.value = value;
-        });
+        // Маска для телефона (исправленная)
+const phoneInput = document.getElementById('phone');
+phoneInput.addEventListener('input', function(e) {
+    const cursorPosition = this.selectionStart;
+    let value = this.value.replace(/\D/g, '');
+    
+    // Сохраняем только цифры, начинающиеся с 7 или 8
+    if (value.startsWith('8')) {
+        value = '7' + value.substring(1);
+    }
+    
+    // Форматируем только если есть цифры
+    if (value.length > 0) {
+        let formattedValue = '+7';
+        
+        if (value.length > 1) {
+            formattedValue += ' (' + value.substring(1, 4);
+        }
+        if (value.length > 4) {
+            formattedValue += ') ' + value.substring(4, 7);
+        }
+        if (value.length > 7) {
+            formattedValue += '-' + value.substring(7, 9);
+        }
+        if (value.length > 9) {
+            formattedValue += '-' + value.substring(9, 11);
+        }
+        
+        this.value = formattedValue;
+        
+        // Восстанавливаем позицию курсора
+        const newCursorPosition = Math.min(cursorPosition, formattedValue.length);
+        this.setSelectionRange(newCursorPosition, newCursorPosition);
+    } else {
+        this.value = '';
+    }
+});
+
+// Разрешаем удаление с помощью Backspace и Delete
+phoneInput.addEventListener('keydown', function(e) {
+    // Разрешаем Backspace, Delete, Tab, стрелки
+    if ([8, 9, 37, 38, 39, 40, 46].includes(e.keyCode)) {
+        return;
+    }
+    
+    // Блокируем ввод не-цифр
+    if (!/[\d\+\(\)\-\s]/.test(e.key) && e.key.length === 1) {
+        e.preventDefault();
+    }
+});
+
+// Обработка Backspace в середине номера
+phoneInput.addEventListener('keyup', function(e) {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+        // Если остались только символы маски, очищаем поле
+        const digits = this.value.replace(/\D/g, '');
+        if (digits.length <= 1) {
+            this.value = '';
+        }
+    }
+});
 
         // Функция для скрытия ошибок
         function hideAllErrors() {
